@@ -17,6 +17,9 @@ venv/
 # Node (якщо додасте React-версію)
 node_modules/
 
+# Архтиви
+*.zip
+
 # Системні
 .DS_Store
 Thumbs.db
