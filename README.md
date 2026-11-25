@@ -5,6 +5,21 @@
 **Стек:** Python 3 · FastAPI · SQLite (stdlib `sqlite3`) · Telegram Bot API · HTML/CSS/JS (без збірки)
 **Дизайн:** тепла шоколадно-карамельна палітра, м'які тіні, плавні мікроанімації, mobile-first.
 
+## Live (Render, безкоштовний план)
+
+| Що | Адреса |
+|---|---|
+| Міні-гра (TMA) | https://sweetlabjuniorachivments.onrender.com/app |
+| Адмін-панель | https://sweetlabjuniorachivments.onrender.com/admin |
+| Healthcheck | https://sweetlabjuniorachivments.onrender.com/health |
+
+Бот **@SweetLabJA_bot** надсилає кнопку Web App саме на цю адресу.
+Сервіс створено з `render.yaml`: `pip install -r requirements.txt` →
+`uvicorn app:app --host 0.0.0.0 --port $PORT`, змінні `BOT_TOKEN` і `WEBAPP_URL` задані в Render.
+
+> Free-план засинає після 15 хв простою — перший запит може зайняти ~50 с.
+> SQLite-база тимчасова: після рестарту 13 інгредієнтів створюються автоматично.
+
 ## Швидкий старт
 
 ```powershell
