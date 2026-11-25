@@ -5,6 +5,7 @@ import os
 import threading
 from typing import Any
 
+import sqlite3
 import requests
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
@@ -60,10 +61,79 @@ class StatusUpdate(BaseModel):
     status: str
 
 
+CATEGORIES = {"base", "filling", "topping"}
+
+
+class IngredientCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+    category: str
+    price: float = Field(ge=0)
+    stock: int = Field(default=0, ge=0)
+    is_active: bool = True
+
+
 class IngredientUpdate(BaseModel):
+    name: str | None = Field(default=None, min_length=1, max_length=100)
+    category: str | None = None
     stock: int | None = Field(default=None, ge=0)
     is_active: bool | None = None
     price: float | None = Field(default=None, ge=0)
+
+
+def clean_ingredient_fields(payload: Any, *, creating: bool = False) -> tuple[list[str], list[Any]]:
+    """Підготувати безпечні поля для SQL оновлення/створення."""
+    updates: list[str] = []
+    values: list[Any] = []
+
+    name = getattr(payload, "name", None)
+    if name is not None:
+        name = name.strip()
+        if not name:
+            raise HTTPException(status_code=400, detail="Назва не може бути порожньою")
+        updates.append("name = ?")
+        values.append(name)
+    elif creating:
+        raise HTTPException(status_code=400, detail="Вкажи назву")
+
+    category = getattr(payload, "category", None)
+    if category is not None:
+        category = category.strip().lower()
+        if category not in CATEGORIES:
+            raise HTTPException(
+                status_code=400,
+                detail="Категорія має бути base, filling або topping",
+            )
+        updates.append("category = ?")
+        values.append(category)
+    elif creating:
+        raise HTTPException(status_code=400, detail="Вкажи категорію")
+
+    for field in ("price", "stock"):
+        value = getattr(payload, field, None)
+        if value is not None:
+            updates.append(f"{field} = ?")
+            values.append(value)
+        elif creating:
+            raise HTTPException(status_code=400, detail=f"Вкажи {field}")
+
+    is_active = getattr(payload, "is_active", None)
+    if is_active is not None:
+        updates.append("is_active = ?")
+        values.append(1 if is_active else 0)
+    elif creating:
+        updates.append("is_active = ?")
+        values.append(1)
+
+    return updates, values
+
+
+def get_ingredient_row(ingredient_id: int) -> dict[str, Any]:
+    with db_cursor() as cur:
+        cur.execute("SELECT * FROM ingredients WHERE id = ?", (ingredient_id,))
+        row = cur.fetchone()
+    if row is None:
+        raise HTTPException(status_code=404, detail="Інгредієнт не знайдено")
+    return row_to_ingredient(row)
 
 
 # ------------------------- Telegram бот -------------------------
@@ -227,32 +297,53 @@ def admin_ingredients() -> list[dict[str, Any]]:
         return [row_to_ingredient(row) for row in cur.fetchall()]
 
 
+@app.post("/api/admin/ingredients", status_code=201)
+def create_ingredient(payload: IngredientCreate) -> dict[str, Any]:
+    updates, values = clean_ingredient_fields(payload, creating=True)
+    columns = ", ".join(u.split(" = ")[0] for u in updates)
+    placeholders = ", ".join("?" for _ in values)
+    try:
+        with db_cursor(commit=True) as cur:
+            cur.execute(
+                f"INSERT INTO ingredients ({columns}) VALUES ({placeholders})",
+                values,
+            )
+            ingredient_id = cur.lastrowid
+    except sqlite3.IntegrityError:
+        raise HTTPException(status_code=409, detail="Позиція з такою назвою вже є")
+
+    return get_ingredient_row(ingredient_id)
+
+
+@app.get("/api/admin/ingredients/{ingredient_id}")
+def get_ingredient(ingredient_id: int) -> dict[str, Any]:
+    return get_ingredient_row(ingredient_id)
+
+
 @app.patch("/api/admin/ingredients/{ingredient_id}")
 def update_ingredient(ingredient_id: int, payload: IngredientUpdate) -> dict[str, Any]:
-    updates: list[str] = []
-    values: list[Any] = []
-
-    if payload.stock is not None:
-        updates.append("stock = ?")
-        values.append(payload.stock)
-    if payload.price is not None:
-        updates.append("price = ?")
-        values.append(payload.price)
-    if payload.is_active is not None:
-        updates.append("is_active = ?")
-        values.append(1 if payload.is_active else 0)
+    get_ingredient_row(ingredient_id)
+    updates, values = clean_ingredient_fields(payload)
 
     if not updates:
         raise HTTPException(status_code=400, detail="Немає що оновлювати")
 
     values.append(ingredient_id)
-    with db_cursor(commit=True) as cur:
-        cur.execute("SELECT id FROM ingredients WHERE id = ?", (ingredient_id,))
-        if cur.fetchone() is None:
-            raise HTTPException(status_code=404, detail="Інгредієнт не знайдено")
-        cur.execute(f"UPDATE ingredients SET {', '.join(updates)} WHERE id = ?", values)
+    try:
+        with db_cursor(commit=True) as cur:
+            cur.execute(f"UPDATE ingredients SET {', '.join(updates)} WHERE id = ?", values)
+    except sqlite3.IntegrityError:
+        raise HTTPException(status_code=409, detail="Позиція з такою назвою вже є")
 
-    return {"success": True}
+    return get_ingredient_row(ingredient_id)
+
+
+@app.delete("/api/admin/ingredients/{ingredient_id}")
+def delete_ingredient(ingredient_id: int) -> dict[str, Any]:
+    get_ingredient_row(ingredient_id)
+    with db_cursor(commit=True) as cur:
+        cur.execute("DELETE FROM ingredients WHERE id = ?", (ingredient_id,))
+    return {"success": True, "id": ingredient_id}
 
 
 # ------------------------- Статичні інтерфейси -------------------------

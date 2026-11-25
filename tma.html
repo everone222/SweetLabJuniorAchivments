@@ -10,7 +10,7 @@
   :root{
     --cocoa:#3E2723; --cocoa-2:#5D4037; --caramel:#BC6C25; --caramel-soft:#D4A373;
     --cream:#FCF8F5; --cream-2:#F3EAE3; --line:#EADFD7; --muted:#9A7C6B;
-    --ok:#2E7D32; --warn:#B26A00;
+    --ok:#2E7D32; --err:#C62828;
     --r-lg:26px; --r-md:18px; --r-sm:12px;
     --shadow-sm:0 2px 10px rgba(62,39,35,.06);
     --shadow-md:0 8px 28px rgba(62,39,35,.10);
@@ -20,22 +20,16 @@
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
   body{
-    background:
-      radial-gradient(1200px 500px at 50% -10%, #F7EDE5 0%, transparent 60%),
-      var(--cream);
+    background:radial-gradient(1200px 500px at 50% -10%, #F7EDE5 0%, transparent 60%), var(--cream);
     color:var(--cocoa);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
+    -webkit-font-smoothing:antialiased;min-height:100vh;
   }
   .app{max-width:470px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
   header.top{
-    position:sticky;top:0;z-index:30;
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-    padding:14px 16px;
-    background:linear-gradient(180deg,rgba(62,39,35,.98),rgba(62,39,35,.92));
-    backdrop-filter:blur(10px);
-    color:#FCF8F5;border-bottom-left-radius:22px;border-bottom-right-radius:22px;
+    position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:14px 16px;background:linear-gradient(180deg,rgba(62,39,35,.98),rgba(62,39,35,.92));
+    backdrop-filter:blur(10px);color:#FCF8F5;border-bottom-left-radius:22px;border-bottom-right-radius:22px;
     box-shadow:var(--shadow-md);
   }
   .brand{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.2px;font-size:15px}
@@ -46,111 +40,114 @@
     background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);
     max-width:46%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   main{flex:1;padding:16px 16px 132px}
-  .screen{animation:rise .42s var(--ease) both}
+  .screen{animation:rise .38s var(--ease) both}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   @keyframes pop{0%{transform:scale(.9);opacity:0}60%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
   @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
   @keyframes shimmer{0%{background-position:-220px 0}100%{background-position:220px 0}}
 
-  /* Hero */
   .hero{text-align:center;padding:26px 8px 6px}
   .hero .gift{font-size:64px;line-height:1;animation:floaty 3.4s ease-in-out infinite;
     filter:drop-shadow(0 10px 18px rgba(188,108,37,.28))}
   .hero h1{font-size:25px;line-height:1.2;margin:16px 0 8px;letter-spacing:-.4px}
   .hero p{font-size:13.5px;color:var(--muted);margin:0 auto;max-width:330px;line-height:1.6}
 
-  /* Buttons */
   .btn{
-    width:100%;border:0;cursor:pointer;font-family:inherit;
-    padding:15px 18px;border-radius:var(--r-md);font-size:15px;font-weight:800;
-    transition:transform .18s var(--ease),box-shadow .25s var(--ease),background .25s;
+    width:100%;border:0;cursor:pointer;font-family:inherit;padding:15px 18px;
+    border-radius:var(--r-md);font-size:15px;font-weight:800;
     display:flex;align-items:center;justify-content:center;gap:8px;
+    transition:transform .18s var(--ease),box-shadow .25s var(--ease),background .25s;
   }
   .btn:active{transform:scale(.975)}
+  .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
   .btn-primary{background:linear-gradient(160deg,#6D4C41,#3E2723);color:#fff;box-shadow:var(--shadow-md)}
-  .btn-primary:hover{box-shadow:var(--shadow-lg)}
   .btn-ghost{background:var(--cream-2);color:var(--cocoa);box-shadow:var(--shadow-sm)}
-  .btn-ghost:hover{background:#EBDFD6}
   .btn-sm{width:auto;padding:11px 16px;font-size:13px;border-radius:14px}
-  .stack{display:grid;gap:10px}
-  .mt{margin-top:22px}
+  .stack{display:grid;gap:10px}.mt{margin-top:22px}
 
-  /* Preview card */
+  .progress{margin-bottom:18px}
+  .progress .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+  .progress .top b{font-size:15px;font-weight:900}
+  .progress .top span{font-size:11px;font-weight:800;color:var(--muted)}
+  .track{height:6px;border-radius:999px;background:var(--cream-2);overflow:hidden}
+  .track i{display:block;height:100%;border-radius:999px;
+    background:linear-gradient(90deg,var(--caramel),#8A4E17);transition:width .35s var(--ease)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:17px;box-shadow:var(--shadow-sm)}
+  .card-label{font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:9px}
+  .name-input{
+    width:100%;border:1.5px solid var(--line);border-radius:var(--r-md);background:#FFFDFB;
+    font-family:inherit;font-size:17px;font-weight:800;color:var(--cocoa);
+    padding:14px 15px;outline:none;transition:border-color .2s,box-shadow .2s;
+  }
+  .name-input:focus{border-color:var(--caramel);box-shadow:0 0 0 3px rgba(188,108,37,.12)}
+  .name-input::placeholder{color:#C9B3A4;font-weight:700}
+  .hint{font-size:11.5px;color:var(--muted);line-height:1.5;margin-top:9px}
+  .emoji-lead{font-size:42px;text-align:center;margin:2px 0 10px}
+
+  .list{display:grid;gap:9px}
+  .option{
+    width:100%;border:1.5px solid var(--line);background:#fff;border-radius:var(--r-md);
+    padding:13px 14px;display:flex;align-items:center;gap:12px;text-align:left;
+    font-family:inherit;cursor:pointer;box-shadow:var(--shadow-sm);
+    transition:transform .18s var(--ease),border-color .2s,background .25s,box-shadow .25s;
+  }
+  .option:active{transform:scale(.985)}
+  .option.on{border-color:var(--cocoa-2);background:linear-gradient(160deg,#F6EFE9,#EFE6DE);
+    box-shadow:var(--shadow-md)}
+  .option:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4)}
+  .option .mark{width:25px;height:25px;flex:0 0 25px;border-radius:9px;border:2px solid var(--line);
+    display:grid;place-items:center;font-size:12px;font-weight:900;color:transparent;background:#fff;
+    transition:all .2s var(--ease)}
+  .option.on .mark{background:var(--cocoa-2);border-color:var(--cocoa-2);color:#fff;animation:pop .3s var(--ease) both}
+  .option .body{flex:1;min-width:0}
+  .option .body b{display:block;font-size:13.5px;font-weight:800;line-height:1.3}
+  .option .body small{display:block;font-size:10px;font-weight:700;color:var(--muted);margin-top:3px}
+  .option .body small.low{color:var(--err)}
+  .option .price{font-size:13px;font-weight:900;color:var(--caramel);white-space:nowrap}
+
   .preview{background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);
     padding:16px;box-shadow:var(--shadow-sm)}
-  .preview .label{font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--muted);text-align:center;margin-bottom:8px}
-  .name-input{
-    width:100%;border:0;border-bottom:2px solid var(--caramel-soft);background:transparent;
-    text-align:center;font-family:inherit;font-size:18px;font-weight:800;color:var(--cocoa);
-    padding:6px 2px 8px;outline:none;transition:border-color .25s;
-  }
-  .name-input:focus{border-color:var(--caramel)}
-  .name-input::placeholder{color:#C9B3A4;font-weight:700}
   .bar{
-    margin-top:14px;border-radius:var(--r-md);min-height:150px;padding:16px 14px;
+    margin-top:12px;border-radius:var(--r-md);min-height:150px;padding:16px 14px;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
     text-align:center;position:relative;overflow:hidden;
     transition:background .5s var(--ease),color .4s;
-    box-shadow:inset 0 2px 14px rgba(0,0,0,.16), inset 0 -1px 0 rgba(255,255,255,.06);
+    box-shadow:inset 0 2px 14px rgba(0,0,0,.16),inset 0 -1px 0 rgba(255,255,255,.06);
     animation:pop .45s var(--ease) both;
   }
   .bar::after{content:"";position:absolute;inset:0;pointer-events:none;
     background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.12) 50%,transparent 60%);
-    background-size:260px 100%;background-repeat:no-repeat;
-    animation:shimmer 4.6s linear infinite}
+    background-size:260px 100%;background-repeat:no-repeat;animation:shimmer 4.6s linear infinite}
   .bar .base{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:800;opacity:.85}
   .bar .fills{font-size:12.5px;font-weight:700;line-height:1.5;max-width:100%}
   .bar .tops{font-size:11px;font-weight:600;opacity:.9;line-height:1.45}
   .bar .empty{font-size:12px;font-weight:600;opacity:.65}
+  .summary{margin-top:14px;display:grid;gap:8px}
+  .summary div{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);font-weight:700}
+  .summary div b{color:var(--cocoa)}
+  .summary .grand{border-top:1px solid var(--line);padding-top:10px;font-size:14px}
+  .summary .grand b{font-size:20px;color:var(--caramel)}
+  .edit-link{background:none;border:0;padding:0;font-family:inherit;font-size:12px;font-weight:800;
+    color:var(--caramel);cursor:pointer}
 
-  /* Section */
-  .section{margin-top:22px}
-  .section h3{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--cocoa-2);margin:0 0 10px;display:flex;align-items:center;gap:8px}
-  .section h3 .n{width:20px;height:20px;border-radius:7px;display:grid;place-items:center;
-    background:var(--cream-2);color:var(--cocoa-2);font-size:10.5px}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-  .chip{
-    border:1.5px solid var(--line);background:#fff;border-radius:var(--r-md);
-    padding:12px 12px;text-align:left;cursor:pointer;font-family:inherit;
-    transition:transform .18s var(--ease),border-color .2s,background .25s,box-shadow .25s;
-    display:flex;flex-direction:column;gap:5px;position:relative;overflow:hidden;
-  }
-  .chip:hover{border-color:#DCCCC0;box-shadow:var(--shadow-sm)}
-  .chip:active{transform:scale(.97)}
-  .chip .n{font-size:12.5px;font-weight:800;line-height:1.3;color:var(--cocoa)}
-  .chip .p{font-size:11.5px;font-weight:900;color:var(--caramel)}
-  .chip.on{border-color:var(--cocoa-2);background:linear-gradient(160deg,#F6EFE9,#EFE6DE);
-    transform:translateY(-1px);box-shadow:var(--shadow-md)}
-  .chip.on::before{content:"✓";position:absolute;top:7px;right:9px;font-size:10px;font-weight:900;
-    color:#fff;background:var(--cocoa-2);width:16px;height:16px;border-radius:50%;
-    display:grid;place-items:center;animation:pop .3s var(--ease) both}
-  .chip .stock{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#B9A091}
-  .chip .stock.low{color:#C62828}
-  .chip:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4)}
-
-  /* Bottom bar */
   .bottom{
-    position:fixed;left:0;right:0;bottom:0;z-index:40;
-    max-width:470px;margin:0 auto;
-    background:rgba(255,255,255,.94);backdrop-filter:blur(14px);
-    border-top:1px solid var(--line);
+    position:fixed;left:0;right:0;bottom:0;z-index:40;max-width:470px;margin:0 auto;
+    background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);
     padding:12px 16px calc(14px + env(safe-area-inset-bottom));
     display:flex;align-items:center;justify-content:space-between;gap:12px;
-    box-shadow:0 -10px 30px rgba(62,39,35,.08);
-    animation:rise .35s var(--ease) both;
+    box-shadow:0 -10px 30px rgba(62,39,35,.08);animation:rise .35s var(--ease) both;
   }
   .bottom .sum small{display:block;font-size:9.5px;font-weight:900;letter-spacing:.14em;
     text-transform:uppercase;color:var(--muted)}
   .bottom .sum b{font-size:21px;font-weight:900;letter-spacing:-.5px;color:var(--cocoa-2)}
+  .bottom .step-count{font-size:10px;font-weight:800;color:var(--muted);text-align:center;flex:1}
   .actions{display:flex;gap:8px}
 
-  /* Success */
   .success{text-align:center;padding:34px 6px}
   .success .emoji{font-size:66px;animation:pop .6s var(--ease) both;display:inline-block}
-
-  /* Orders */
   .row-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
   .row-head h2{font-size:20px;margin:0;letter-spacing:-.3px}
   .link{background:none;border:0;font-family:inherit;font-size:12.5px;font-weight:800;
@@ -161,31 +158,23 @@
   .order .oh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:7px}
   .order .id{font-size:12.5px;font-weight:900}
   .badge{font-size:10px;font-weight:900;letter-spacing:.04em;padding:5px 10px;border-radius:999px;white-space:nowrap}
-  .b-created{background:#FFF1D6;color:#8A5A00}
-  .b-preparing{background:#DCEBFF;color:#0B4A8F}
-  .b-delivering{background:#EADFFF;color:#5A2CA0}
-  .b-completed{background:#DDF3DF;color:#1E5E23}
+  .b-created{background:#FFF1D6;color:#8A5A00}.b-preparing{background:#DCEBFF;color:#0B4A8F}
+  .b-delivering{background:#EADFFF;color:#5A2CA0}.b-completed{background:#DDF3DF;color:#1E5E23}
   .order .meta{font-size:11.5px;color:var(--muted);line-height:1.65}
   .order .meta b{color:var(--cocoa)}
   .order .total{display:flex;justify-content:space-between;font-size:12.5px;font-weight:800;
     border-top:1px solid var(--cream-2);margin-top:10px;padding-top:9px}
   .order .total span:last-child{color:var(--caramel)}
 
-  /* States */
   .empty{text-align:center;color:var(--muted);font-weight:600;font-size:13px;padding:56px 0}
-  .skeleton{height:14px;border-radius:8px;
-    background:linear-gradient(90deg,#EFE6DE 0%,#F8F1EB 50%,#EFE6DE 100%);
-    background-size:220px 100%;animation:shimmer 1.2s linear infinite}
   .loader{display:grid;place-items:center;height:100vh;background:var(--cocoa);color:var(--cream);gap:14px}
   .loader .sp{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.2);
     border-top-color:var(--caramel-soft);animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .toast{
-    position:fixed;left:50%;bottom:104px;transform:translate(-50%,20px);
+  .toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,20px);
     background:var(--cocoa);color:#fff;font-size:12.5px;font-weight:700;
     padding:11px 18px;border-radius:999px;box-shadow:var(--shadow-lg);
-    opacity:0;pointer-events:none;transition:all .3s var(--ease);z-index:60;max-width:88%;text-align:center;
-  }
+    opacity:0;pointer-events:none;transition:all .3s var(--ease);z-index:60;max-width:88%;text-align:center}
   .toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
@@ -201,6 +190,13 @@
 
 <script>
 const API = '/api';
+const STEPS = [
+  {key:'name',    icon:'✍️', title:'Назва плитки', hint:'Придумай власну назву — вона буде на замовленні.'},
+  {key:'base',    icon:'🍫', title:'Обери шоколад', hint:'Одна основа — чорний, молочний, білий або рубі.'},
+  {key:'filling', icon:'🥜', title:'Додай начинки', hint:'Можна обрати скільки завгодно. Пропусти, якщо не потрібно.'},
+  {key:'topping', icon:'✨', title:'Обери декор', hint:'Останній штрих — зроби плитку особливою.'},
+  {key:'review',  icon:'✅', title:'Перевір рецепт', hint:'Усе готово? Тоді надсилаємо замовлення.'},
+];
 
 const state = {
   step: 'welcome',
@@ -222,17 +218,10 @@ const INK = {
   pink:  { bg:'linear-gradient(160deg,#E7A0A0,#C87A7A)', fg:'#3B1A1A' },
 };
 
-function baseInk(base){
-  const n = (base?.name || '').toLowerCase();
-  if (n.includes('чорн')) return INK.dark;
-  if (n.includes('біл'))   return INK.white;
-  if (n.includes('рожев') || n.includes('рубі')) return INK.pink;
-  return INK.milk;
-}
-
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = (n) => `${Number(n).toFixed(0)} грн`;
 const el = (id) => document.getElementById(id);
+const stepIndex = () => STEPS.findIndex(s => s.key === state.step);
 
 function toast(msg){
   const t = el('toast');
@@ -241,7 +230,6 @@ function toast(msg){
   clearTimeout(t._tid);
   t._tid = setTimeout(() => t.classList.remove('show'), 2200);
 }
-
 function haptic(type){
   try {
     const hf = window.Telegram?.WebApp?.HapticFeedback;
@@ -250,13 +238,18 @@ function haptic(type){
     else hf.selectionChanged();
   } catch(_) {}
 }
-
 function total(){
   return (state.base?.price || 0)
     + state.fillings.reduce((s, i) => s + i.price, 0)
     + state.toppings.reduce((s, i) => s + i.price, 0);
 }
-
+function baseInk(base){
+  const n = (base?.name || '').toLowerCase();
+  if (n.includes('чорн')) return INK.dark;
+  if (n.includes('біл'))   return INK.white;
+  if (n.includes('рожев') || n.includes('рубі')) return INK.pink;
+  return INK.milk;
+}
 async function api(path, options){
   const res = await fetch(API + path, options);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -266,30 +259,27 @@ async function api(path, options){
 /* ----------------------------- Рендер ----------------------------- */
 function render(){
   el('who').textContent = state.user.first_name || state.user.username || 'Гість';
-
   if (state.loading) {
-    el('main').innerHTML = `
-      <div class="loader">
-        <div class="sp"></div>
-        <div style="font-weight:800;font-size:14px">Відкриваємо майстерню…</div>
-      </div>`;
+    el('main').innerHTML = `<div class="loader"><div class="sp"></div>
+      <div style="font-weight:800;font-size:14px">Відкриваємо майстерню…</div></div>`;
     document.body.style.background = '#3E2723';
     return;
   }
   document.body.style.background = '';
-
-  const views = { welcome: viewWelcome, builder: viewBuilder, success: viewSuccess, orders: viewOrders };
+  const views = {
+    welcome: viewWelcome, name: viewStep, base: viewStep, filling: viewStep,
+    topping: viewStep, review: viewStep, success: viewSuccess, orders: viewOrders,
+  };
   el('main').innerHTML = (views[state.step] || viewWelcome)();
   bind();
 }
 
 function viewWelcome(){
-  return `
-  <section class="screen">
+  return `<section class="screen">
     <div class="hero">
       <div class="gift">🎁</div>
       <h1>Створи свій шоколад</h1>
-      <p>Обери основу, додай начинки та декор — і ми виготовимо унікальну плитку ручної роботи саме для тебе.</p>
+      <p>П'ять простих кроків — і твоя унікальна плитка ручної роботи готова до виготовлення.</p>
     </div>
     <div class="stack mt">
       <button class="btn btn-primary" data-act="start">🎮 Почати створення</button>
@@ -299,63 +289,101 @@ function viewWelcome(){
   </section>`;
 }
 
-function chip(item, selected){
+function progressBar(){
+  const i = stepIndex();
+  const step = STEPS[i] || STEPS[0];
+  return `<div class="progress">
+    <div class="top"><b>${step.icon} ${step.title}</b><span>Крок ${i + 1} з ${STEPS.length}</span></div>
+    <div class="track"><i style="width:${((i + 1) / STEPS.length) * 100}%"></i></div>
+  </div>`;
+}
+
+function optionRow(item, selected, single){
   const low = item.stock < 30;
   const disabled = item.stock <= 0;
-  return `
-    <button class="chip ${selected ? 'on' : ''}" data-item="${item.id}" ${disabled ? 'disabled' : ''}>
-      <span class="n">${esc(item.name)}</span>
-      <span class="p">${money(item.price)}</span>
-      <span class="stock ${low ? 'low' : ''}">${disabled ? 'немає' : `${item.stock} од.`}</span>
-    </button>`;
+  return `<button class="option ${selected ? 'on' : ''}" data-item="${item.id}" ${disabled ? 'disabled' : ''}>
+    <span class="mark">${single ? '•' : '✓'}</span>
+    <span class="body"><b>${esc(item.name)}</b>
+      <small class="${low ? 'low' : ''}">${disabled ? 'немає в наявності' : `залишок: ${item.stock} од.`}</small>
+    </span>
+    <span class="price">${money(item.price)}</span>
+  </button>`;
 }
 
-function section(title, num, items, selectedIds){
-  if (!items.length) return '';
-  return `
-    <div class="section">
-      <h3><span class="n">${num}</span> ${title}</h3>
-      <div class="grid2">${items.map(i => chip(i, selectedIds.includes(i.id))).join('')}</div>
+function viewStep(){
+  const i = stepIndex();
+  const step = STEPS[i] || STEPS[0];
+  let content = '';
+
+  if (step.key === 'name') {
+    content = `<div class="card">
+      <div class="emoji-lead">✍️</div>
+      <div class="card-label">Назва шоколаду</div>
+      <input class="name-input" id="choco-name" maxlength="40" value="${esc(state.name)}"
+        placeholder="Наприклад, Карамельна фантазія" />
+      <div class="hint">${esc(step.hint)}</div>
     </div>`;
-}
+  } else {
+    const items = state.ingredients.filter(x => x.category === step.key);
+    const single = step.key === 'base';
+    const selected = single
+      ? (state.base ? [state.base.id] : [])
+      : (step.key === 'filling' ? state.fillings : state.toppings).map(x => x.id);
+    content = `<div class="card">
+      <div class="card-label">${esc(step.hint)}</div>
+      <div class="list">${items.length
+        ? items.map(x => optionRow(x, selected.includes(x.id), single)).join('')
+        : `<div class="empty">Позиції поки відсутні</div>`}</div>
+    </div>`;
+  }
 
-function viewBuilder(){
-  const ink = baseInk(state.base);
-  const byCat = (c) => state.ingredients.filter(i => i.category === c);
-  const fillIds = state.fillings.map(i => i.id);
-  const topIds = state.toppings.map(i => i.id);
-
-  return `
-  <section class="screen">
-    <div class="preview">
-      <div class="label">Твоя плитка</div>
-      <input class="name-input" id="choco-name" maxlength="40" value="${esc(state.name)}" placeholder="Назва плитки" />
+  if (step.key === 'review') {
+    const ink = baseInk(state.base);
+    const fills = state.fillings.map(x => x.name).join(' · ');
+    const tops = state.toppings.map(x => x.name).join(' · ');
+    content = `<div class="preview">
+      <div class="card-label">Твоя плитка</div>
+      <div style="font-size:18px;font-weight:900;text-align:center;margin-bottom:4px">${esc(state.name)}</div>
       <div class="bar" style="background:${ink.bg};color:${ink.fg}">
         <div class="base">${esc(state.base?.name || 'Оберіть основу')}</div>
-        ${state.fillings.length
-          ? `<div class="fills">${state.fillings.map(f => esc(f.name)).join(' · ')}</div>`
-          : `<div class="empty">без начинки</div>`}
-        ${state.toppings.length ? `<div class="tops">✨ ${state.toppings.map(t => esc(t.name)).join(' · ')}</div>` : ''}
+        <div class="fills">${fills ? esc(fills) : 'без начинки'}</div>
+        ${tops ? `<div class="tops">✨ ${esc(tops)}</div>` : ''}
       </div>
-    </div>
+      <div class="summary">
+        <div><span>Основа</span><b>${esc(state.base?.name || '—')} · ${money(state.base?.price || 0)}</b></div>
+        <div><span>Начинки</span><b>${state.fillings.length} · ${money(state.fillings.reduce((s,x)=>s+x.price,0))}</b></div>
+        <div><span>Декор</span><b>${state.toppings.length} · ${money(state.toppings.reduce((s,x)=>s+x.price,0))}</b></div>
+        <div class="grand"><span>Разом</span><b>${money(total())}</b></div>
+      </div>
+      <div style="display:flex;gap:14px;margin-top:14px;flex-wrap:wrap">
+        <button class="edit-link" data-act="edit-name">Змінити назву</button>
+        <button class="edit-link" data-act="edit-base">Змінити шоколад</button>
+        <button class="edit-link" data-act="edit-filling">Змінити начинки</button>
+        <button class="edit-link" data-act="edit-topping">Змінити декор</button>
+      </div>
+    </div>`;
+  }
 
-    ${section('Основа шоколаду', 1, byCat('base'), state.base ? [state.base.id] : [])}
-    ${section('Начинки', 2, byCat('filling'), fillIds)}
-    ${section('Декор', 3, byCat('topping'), topIds)}
+  const isFirst = i === 0;
+  const isLast = i === STEPS.length - 1;
+  const nextLabel = isLast ? 'Замовити 🍫' : 'Далі →';
+
+  return `<section class="screen">
+    ${progressBar()}
+    <div style="font-size:13px;color:var(--muted);line-height:1.5;margin:-8px 0 14px">${esc(step.hint)}</div>
+    ${content}
   </section>
-
   <div class="bottom">
     <div class="sum"><small>Разом</small><b>${money(total())}</b></div>
     <div class="actions">
-      <button class="btn btn-ghost btn-sm" data-act="back">Назад</button>
-      <button class="btn btn-primary btn-sm" data-act="submit">Замовити 🍫</button>
+      <button class="btn btn-ghost btn-sm" data-act="prev">${isFirst ? 'Назад' : '←'}</button>
+      <button class="btn btn-primary btn-sm" data-act="${isLast ? 'submit' : 'next'}">${nextLabel}</button>
     </div>
   </div>`;
 }
 
 function viewSuccess(){
-  return `
-  <section class="screen success">
+  return `<section class="screen success">
     <div class="emoji">🎉</div>
     <h1 style="font-size:23px;margin:16px 0 8px">Замовлення прийнято!</h1>
     <p style="font-size:13.5px;color:var(--muted);line-height:1.6;margin:0 auto;max-width:320px">
@@ -377,56 +405,72 @@ function viewOrders(){
     ? state.orders.map(o => {
         const [label, cls] = labels[o.status] || ['Невідомо','b-created'];
         const r = o.recipe || {};
-        const base = r.base?.name || '—';
         const fills = (r.fillings || []).map(f => f.name).join(', ');
-        return `
-        <div class="order">
-          <div class="oh">
-            <span class="id">Замовлення #${o.id}</span>
-            <span class="badge ${cls}">${label}</span>
-          </div>
+        return `<div class="order">
+          <div class="oh"><span class="id">Замовлення #${o.id}</span><span class="badge ${cls}">${label}</span></div>
           <div class="meta">
             <div>Плитка: <b>${esc(r.name || '—')}</b></div>
-            <div>Основа: ${esc(base)}${fills ? ` · ${esc(fills)}` : ''}</div>
+            <div>Основа: ${esc(r.base?.name || '—')}${fills ? ` · ${esc(fills)}` : ''}</div>
           </div>
           <div class="total"><span>Сума</span><span>${money(o.totalPrice)}</span></div>
         </div>`;
       }).join('')
     : `<div class="empty">У тебе поки немає замовлень</div>`;
-
-  return `
-  <section class="screen">
-    <div class="row-head">
-      <h2>Мої замовлення</h2>
-      <button class="link" data-act="home">&larr; На головну</button>
-    </div>
+  return `<section class="screen">
+    <div class="row-head"><h2>Мої замовлення</h2>
+      <button class="link" data-act="home">&larr; На головну</button></div>
     ${list}
   </section>`;
 }
 
 /* ----------------------------- Події ----------------------------- */
+function go(key){
+  state.step = key;
+  haptic('select');
+  render();
+}
+
+function nextStep(){
+  const i = stepIndex();
+  const step = STEPS[i];
+  if (!step) return;
+  if (step.key === 'name') {
+    state.name = (el('choco-name')?.value || '').trim() || 'Моя крафтова плитка';
+  }
+  if (step.key === 'base' && !state.base) {
+    toast('Спочатку обери шоколад');
+    return;
+  }
+  if (i < STEPS.length - 1) go(STEPS[i + 1].key);
+}
+
+function prevStep(){
+  const i = stepIndex();
+  if (i <= 0) { state.step = 'welcome'; render(); return; }
+  go(STEPS[i - 1].key);
+}
+
 function bind(){
   document.querySelectorAll('[data-item]').forEach(node => {
     node.addEventListener('click', () => toggleItem(Number(node.dataset.item)));
   });
-
   document.querySelectorAll('[data-act]').forEach(node => {
     node.addEventListener('click', () => {
       const act = node.dataset.act;
-      if (act === 'start') { state.step = 'builder'; haptic('select'); render(); }
-      if (act === 'back')  { state.step = 'welcome'; render(); }
-      if (act === 'home')  { state.step = 'welcome'; render(); }
-      if (act === 'orders') { state.step = 'orders'; loadOrders(); }
-      if (act === 'submit') submitOrder();
+      if (act === 'start') go('name');
+      else if (act === 'next') nextStep();
+      else if (act === 'prev') prevStep();
+      else if (act === 'submit') submitOrder();
+      else if (act === 'orders') { state.step = 'orders'; loadOrders(); }
+      else if (act === 'home') go('welcome');
+      else if (act.startsWith('edit-')) go(act.slice(5));
     });
   });
-
   const nameInput = el('choco-name');
   if (nameInput) {
     nameInput.addEventListener('input', (e) => { state.name = e.target.value; });
     nameInput.addEventListener('blur', () => {
       if (!state.name.trim()) state.name = 'Моя крафтова плитка';
-      render();
     });
   }
 }
@@ -434,20 +478,13 @@ function bind(){
 function toggleItem(id){
   const item = state.ingredients.find(i => i.id === id);
   if (!item) return;
-
   if (item.category === 'base') {
-    state.base = item;
-    haptic('select');
-  } else if (item.category === 'filling') {
-    state.fillings = state.fillings.some(i => i.id === id)
-      ? state.fillings.filter(i => i.id !== id)
-      : [...state.fillings, item];
-    haptic('select');
+    state.base = state.base?.id === id ? null : item;
   } else {
-    state.toppings = state.toppings.some(i => i.id === id)
-      ? state.toppings.filter(i => i.id !== id)
-      : [...state.toppings, item];
-    haptic('select');
+    const key = item.category === 'filling' ? 'fillings' : 'toppings';
+    state[key] = state[key].some(i => i.id === id)
+      ? state[key].filter(i => i.id !== id)
+      : [...state[key], item];
   }
   render();
 }
@@ -456,7 +493,6 @@ function toggleItem(id){
 async function loadIngredients(){
   try {
     state.ingredients = await api('/ingredients');
-    state.base = state.ingredients.find(i => i.category === 'base') || null;
     state.error = null;
   } catch (e) {
     state.error = 'Не вдалося завантажити інгредієнти. Перевір, чи запущений бекенд.';
@@ -465,7 +501,6 @@ async function loadIngredients(){
     render();
   }
 }
-
 async function loadOrders(){
   render();
   try {
@@ -476,12 +511,10 @@ async function loadOrders(){
   }
   render();
 }
-
 async function submitOrder(){
   if (!state.base) { toast('Обери основу шоколаду'); return; }
   const btn = document.querySelector('[data-act="submit"]');
   if (btn) { btn.disabled = true; btn.textContent = 'Надсилаємо…'; }
-
   try {
     await api('/orders', {
       method: 'POST',
