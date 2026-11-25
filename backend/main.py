@@ -13,14 +13,24 @@ from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from database import (
-    db_cursor,
-    get_or_create_user,
-    init_db,
-    now_iso,
-    row_to_ingredient,
-    row_to_order,
-)
+try:  # запуск як пакет: from backend.main import app
+    from .database import (
+        db_cursor,
+        get_or_create_user,
+        init_db,
+        now_iso,
+        row_to_ingredient,
+        row_to_order,
+    )
+except ImportError:  # локальний запуск: python main.py з папки backend
+    from database import (
+        db_cursor,
+        get_or_create_user,
+        init_db,
+        now_iso,
+        row_to_ingredient,
+        row_to_order,
+    )
 
 load_dotenv()
 
