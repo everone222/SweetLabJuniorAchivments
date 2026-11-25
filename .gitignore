@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# База даних
+*.db
+*.db-journal
+
+# Середовище (ніколи не комітимо токен бота!)
+.env
+.env.local
+.env.*.local
+!backend/.env.example
+
+# Node (якщо додасте React-версію)
+node_modules/
+
+# Системні
+.DS_Store
+Thumbs.db
