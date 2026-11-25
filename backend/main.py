@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field
 try:  # запуск як пакет: from backend.main import app
     from .database import (
         db_cursor,
+        ensure_seed,
         get_or_create_user,
         init_db,
         now_iso,
@@ -25,6 +26,7 @@ try:  # запуск як пакет: from backend.main import app
 except ImportError:  # локальний запуск: python main.py з папки backend
     from database import (
         db_cursor,
+        ensure_seed,
         get_or_create_user,
         init_db,
         now_iso,
@@ -39,6 +41,7 @@ WEBAPP_URL = os.getenv("WEBAPP_URL", "http://localhost:5000/app")
 STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 
 init_db()
+ensure_seed()
 
 app = FastAPI(title="SweetLab API", version="1.0.0")
 

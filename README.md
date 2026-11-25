@@ -97,9 +97,14 @@ python app.py
 або через Procfile (вже є в корені): `web: python app.py`.
 
 - Застосунок слухає `0.0.0.0` і порт із змінної `PORT` (за замовчуванням `8000`).
-- Кореневі файли `app.py`, `main.py`, `Procfile`, `requirements.txt`, `runtime.txt` — обов'язкові.
+- Кореневі файли `app.py`, `database.py`, `main.py`, `tma.html`, `admin.html`,
+  `cleanup_demo.py`, `Procfile`, `requirements.txt`, `runtime.txt` — обов'язкові.
+  Застосунок працює **навіть якщо хостинг залив лише кореневі файли** (без `backend/` і `static/`).
+- `cleanup_demo.py` і `main.py` — сумісні точки входу для старих Start Command на хостингу.
+  Усі три команди (`python app.py`, `python main.py`, `python cleanup_demo.py`) запускають той самий сервер.
+- База створюється автоматично; 13 стартових інгредієнтів додаються при першому запуску
+  лише якщо таблиця порожня (функція `ensure_seed()` у `database.py`).
 - ⚠️ `.env` не лежить у Git (там токен бота). На хостингу задайте змінні оточення вручну:
   - `BOT_TOKEN` — токен бота (інакше бот вимкнеться, але сайт працюватиме);
   - `WEBAPP_URL` — **HTTPS**-адреса вигляду `https://your-app.onrender.com/app`;
   - `DATABASE_URL` — залиште `sqlite:///./sweetlab.db` або задайте свою.
-- Не вказуйте як стартову команду `cleanup_demo.py` — це одноразовий допоміжний скрипт, його видалено.

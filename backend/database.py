@@ -78,6 +78,39 @@ def init_db() -> None:
         )
 
 
+# Початковий асортимент — щоб хостинг із чистою базою одразу мав дані.
+SEED_INGREDIENTS = [
+    {"name": "Чорний шоколад 72%", "category": "base", "price": 50, "stock": 100},
+    {"name": "Молочний шоколад", "category": "base", "price": 45, "stock": 120},
+    {"name": "Білий шоколад", "category": "base", "price": 45, "stock": 80},
+    {"name": "Рожевий шоколад (Рубі)", "category": "base", "price": 60, "stock": 50},
+    {"name": "Горіхи фундук", "category": "filling", "price": 20, "stock": 200},
+    {"name": "Мигдаль", "category": "filling", "price": 22, "stock": 150},
+    {"name": "Сушена малина", "category": "filling", "price": 25, "stock": 90},
+    {"name": "Солона карамель", "category": "filling", "price": 18, "stock": 110},
+    {"name": "Шматочки манго", "category": "filling", "price": 20, "stock": 70},
+    {"name": "Золотий харчовий пил", "category": "topping", "price": 35, "stock": 40},
+    {"name": "Кокосова стружка", "category": "topping", "price": 10, "stock": 300},
+    {"name": "Їстівні квіти", "category": "topping", "price": 30, "stock": 60},
+    {"name": "Какао-боби (крихта)", "category": "topping", "price": 15, "stock": 130},
+]
+
+
+def ensure_seed() -> None:
+    """Додати стартові інгредієнти, якщо база ще порожня."""
+    init_db()
+    with db_cursor(commit=True) as cur:
+        cur.execute("SELECT COUNT(*) AS c FROM ingredients")
+        if cur.fetchone()["c"]:
+            return
+        for item in SEED_INGREDIENTS:
+            cur.execute(
+                "INSERT OR IGNORE INTO ingredients (name, category, price, stock, is_active) "
+                "VALUES (?, ?, ?, ?, 1)",
+                (item["name"], item["category"], item["price"], item["stock"]),
+            )
+
+
 def now_iso() -> str:
     return datetime.utcnow().isoformat()
 
